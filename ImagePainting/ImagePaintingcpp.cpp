@@ -16,6 +16,7 @@ int error(CvScalar r, CvScalar c) {					// 에러 함수
 	return sum / 3;		//평균을 반환
 }
 
+
 errorpoint maxerror(IplImage* ref, IplImage* cvs, int y, int x, int brush) {			//그리드 내부의 에러 가장 큰 좌표 구하는 함수
 	CvSize size = cvGetSize(ref);
 	errorpoint e;
@@ -52,6 +53,18 @@ int areaError(IplImage* ref, IplImage* cvs, int y, int x, int brush) {			//그리�
 	return errorSum / cnt;			//그리드 내부 에러 평균을 구한 후 반환
 }
 
+void shuffle(errorpoint* e, int cnt) {			//셔플 함수
+	srand(time(NULL));			//srand함수를 time을 통해 난수 얻어옴
+	int rn;
+	errorpoint tmp;
+	for (int i = 0; i < cnt - 1; i++) {
+		rn = rand() % cnt;
+		tmp = e[i];		//무작위로 인덱스 바꿔줌
+		e[i] = e[rn];
+		e[rn] = tmp;
+
+	}
+}
 
 void paintLayer(IplImage* ref, IplImage* cvs, int brush, int n) {
 	CvSize size = cvGetSize(ref);
@@ -79,6 +92,7 @@ void paintLayer(IplImage* ref, IplImage* cvs, int brush, int n) {
 			}
 		}
 
+	shuffle(e, cnt);		// 구조체배열의 순서를 랜덤으로 셔플하는 함수 호출
 
 	if (n == 0) {		//모드가 0이면
 		for (int j = 0; j < i; ++j) {
