@@ -1,3 +1,3 @@
 ﻿  ImagePaintingcpp.cpp
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(8,6): warning C4101: 'n' :참조되지 않은 지역 변수입니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(14,61): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   ImagePainting.vcxproj -> C:\Users\USER\source\repos\ImagePainting\Debug\ImagePainting.exe
