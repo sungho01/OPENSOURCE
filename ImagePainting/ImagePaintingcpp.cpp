@@ -69,7 +69,7 @@ void shuffle(errorpoint* e, int cnt) {			//셔플 함수
 CvPoint nextpoint(CvPoint cur, IplImage* ref) {				//붓질할 다음 좌표 구하는 함수
 	int gx, gy;
 	int cx1, cy1;
-	//int cx2, cy2;
+
 	CvSize size = cvGetSize(ref);
 
 	if (cur.x + 1 < 0 || cur.x + 1 > size.width - 1) {			//좌표 벗어났을 시 방지
@@ -86,32 +86,12 @@ CvPoint nextpoint(CvPoint cur, IplImage* ref) {				//붓질할 다음 좌표 구하는 함�
 		cy1 = cur.y + 1;
 	}
 
-
-	//if (cur.x - 1 < 0 || cur.x - 1 > size.width - 1) {			//좌표 벗어났을 시 방지
-	//	cx2 = cur.x;
-	//}
-	//else {
-	//	cx2 = cur.x - 1;
-	//}
-
-	//if (cur.y - 1 < 0 || cur.y - 1 > size.height - 1) {			//좌표 벗어났을 시 방지
-	//	cy2 = cur.y;
-	//}
-	//else {
-	//	cy2 = cur.y - 1;
-	//}
-
 	CvScalar s = cvGet2D(ref, cur.y, cur.x);
 	CvScalar sx = cvGet2D(ref, cur.y, cx1);
 	CvScalar sy = cvGet2D(ref, cy1, cur.x);
-	/*CvScalar sx1 = cvGet2D(ref, cur.y, cx2);
-	CvScalar sy1 = cvGet2D(ref, cy2, cur.x);*/
 
 	gx = (sx.val[0] - s.val[0]) * 0.11 + (sx.val[1] - s.val[1]) * 0.59 + (sx.val[2] - s.val[2]) * 0.3;
 	gy = (sy.val[0] - s.val[0]) * 0.11 + (sy.val[1] - s.val[1]) * 0.59 + (sy.val[2] - s.val[2]) * 0.3;
-
-	//gx = (sx.val[0] - sx1.val[0]) * 0.11 + (sx.val[1] - sx1.val[1]) * 0.59 + (sx.val[2] - sx1.val[2]) * 0.3;  // 논문에 나온 비율로 변화율 구함 opencv는 bgr순서이므로 순서에 맞춤
-	//gy = (sy.val[0] - sy1.val[0]) * 0.11 + (sy.val[1] - sy1.val[1]) * 0.59 + (sy.val[2] - sy1.val[2]) * 0.3;
 
 	CvPoint next;
 
@@ -230,13 +210,13 @@ int main() {
 	IplImage* src;
 	int n = 0;
 	cout << "=============================================" << endl;
-	cout << "Painterly Rendering" << endl;	
+	cout << "Painterly Rendering" << endl;
 	cout << "=============================================" << endl;
 	while (1) {									//이미지 이름 받을 반복문
-		char s[100];
-		cout << "Input File Path: ";
+		char s[100];				//입력 받을 이미지 경로
+		cout << "Input File Path: ";	
 		cin >> s;
-		src = cvLoadImage(s);
+		src = cvLoadImage(s);		//받은 경로로 이미지를 불러온다
 		if (src == nullptr) {
 			cout << "File Not Found!" << endl;
 		}
@@ -253,7 +233,7 @@ int main() {
 			break;
 	}
 
-	CvSize size = cvGetSize(src);
+	CvSize size = cvGetSize(src);		//이미지의 사이지를 받아온다.
 	IplImage* reference = cvCreateImage(size, 8, 3);
 	IplImage* canvas = cvCreateImage(size, 8, 3);
 
@@ -261,8 +241,8 @@ int main() {
 		for (int x = 0; x < size.width; ++x)
 			cvSet2D(canvas, y, x, cvScalar(255, 255, 255));
 
-	int brush[5] = { 30, 16, 12, 8, 4};			//붓 크기 배열
-	cvShowImage("src", src);
+	int brush[5] = { 30, 16, 12, 8, 4 };			//붓 크기 배열
+	cvShowImage("src", src);		//이미지 변환을 실시간으로 볼 수 있게 미리 띄운 후 작업 진행
 	cvShowImage("dst", canvas);
 
 	paint(src, canvas, reference, brush, 5, n); //paint 함수 호출

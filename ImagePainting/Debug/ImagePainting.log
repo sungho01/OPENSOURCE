@@ -1,12 +1,11 @@
 ﻿  ImagePaintingcpp.cpp
 C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(14,61): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(57,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(110,69): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(111,69): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(141,31): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(142,33): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(161,13): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(163,35): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(164,35): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  LINK : C:\Users\USER\source\repos\ImagePainting\Debug\ImagePainting.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(93,69): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(94,69): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(121,31): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(122,33): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(141,13): warning C4244: '초기화 중': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(143,35): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\USER\source\repos\ImagePainting\ImagePainting\ImagePaintingcpp.cpp(144,35): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   ImagePainting.vcxproj -> C:\Users\USER\source\repos\ImagePainting\Debug\ImagePainting.exe
