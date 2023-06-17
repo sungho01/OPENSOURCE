@@ -66,6 +66,114 @@ void shuffle(errorpoint* e, int cnt) {			//셔플 함수
 	}
 }
 
+CvPoint nextpoint(CvPoint cur, IplImage* ref) {				//붓질할 다음 좌표 구하는 함수
+	int gx, gy;
+	int cx1, cy1;
+	//int cx2, cy2;
+	CvSize size = cvGetSize(ref);
+
+	if (cur.x + 1 < 0 || cur.x + 1 > size.width - 1) {			//좌표 벗어났을 시 방지
+		cx1 = cur.x;
+	}
+	else {
+		cx1 = cur.x + 1;
+	}
+
+	if (cur.y + 1 < 0 || cur.y + 1 > size.height - 1) {			//좌표 벗어났을 시 방지
+		cy1 = cur.y;
+	}
+	else {
+		cy1 = cur.y + 1;
+	}
+
+
+	//if (cur.x - 1 < 0 || cur.x - 1 > size.width - 1) {			//좌표 벗어났을 시 방지
+	//	cx2 = cur.x;
+	//}
+	//else {
+	//	cx2 = cur.x - 1;
+	//}
+
+	//if (cur.y - 1 < 0 || cur.y - 1 > size.height - 1) {			//좌표 벗어났을 시 방지
+	//	cy2 = cur.y;
+	//}
+	//else {
+	//	cy2 = cur.y - 1;
+	//}
+
+	CvScalar s = cvGet2D(ref, cur.y, cur.x);
+	CvScalar sx = cvGet2D(ref, cur.y, cx1);
+	CvScalar sy = cvGet2D(ref, cy1, cur.x);
+	/*CvScalar sx1 = cvGet2D(ref, cur.y, cx2);
+	CvScalar sy1 = cvGet2D(ref, cy2, cur.x);*/
+
+	gx = (sx.val[0] - s.val[0]) * 0.11 + (sx.val[1] - s.val[1]) * 0.59 + (sx.val[2] - s.val[2]) * 0.3;
+	gy = (sy.val[0] - s.val[0]) * 0.11 + (sy.val[1] - s.val[1]) * 0.59 + (sy.val[2] - s.val[2]) * 0.3;
+
+	//gx = (sx.val[0] - sx1.val[0]) * 0.11 + (sx.val[1] - sx1.val[1]) * 0.59 + (sx.val[2] - sx1.val[2]) * 0.3;  // 논문에 나온 비율로 변화율 구함 opencv는 bgr순서이므로 순서에 맞춤
+	//gy = (sy.val[0] - sy1.val[0]) * 0.11 + (sy.val[1] - sy1.val[1]) * 0.59 + (sy.val[2] - sy1.val[2]) * 0.3;
+
+	CvPoint next;
+
+	if (gy * cur.x + -gx * cur.y > 0) {		//90도를 벗어나지 않은 경우 수직방향
+		next = cvPoint(-gy, gx);
+	}
+	else {								//벗어났을 경우 반대방향의 수직방향
+		next = cvPoint(gy, -gx);
+	}
+	return next;
+}
+
+void paintstroke(errorpoint e, IplImage* ref, IplImage* cvs) {
+	CvSize size = cvGetSize(ref);
+	int maxstrokelength = 10;		//최대 붓질 횟수
+	int minxstrokelength = 5;		//최소 붓질 횟수
+
+	CvPoint current = e.point;			// 현재좌표를 저장
+	CvPoint next;
+
+	for (int i = 0; i < maxstrokelength; i++) {
+		CvScalar r = cvGet2D(ref, current.y, current.x);
+		CvScalar c = cvGet2D(cvs, current.y, current.x);
+		int rc = 0, rs = 0;
+
+		for (int i = 0; i < 3; ++i) {						//원본과 변화했을 때 뭐가 더 괜찮은지 판단할 반복문
+			rc = (r.val[i] - c.val[i]) * (r.val[i] - c.val[i]);
+			rs = (r.val[i] - e.c.val[i]) * (r.val[i] - e.c.val[i]);
+		}
+
+		if (i > minxstrokelength && (rc < rs)) break;		//최소만큼 그렸을 때 변화한 것보다 원본이 낫다면 중지
+
+		next = nextpoint(current, ref);							// 다음 지점의 좌표 가져올 함수 호출
+		if (i != 0 && next.x == 0 && next.y == 0) break;					//  단색이라면 중지
+		else if (i == 0 && next.x == 0 && next.y == 0) {	// 만약 배경이 다 같은 색이여서 못 그릴 수 있으므로 넣은 조건
+
+			next.x = e.brush + current.x;				// 붓 크기만큼 한칸식 이동
+			next.y = e.brush + current.y;
+
+			if (next.x < 0 || next.x > size.width - 1) continue;	// 인덱스 벗어났을 시
+			if (next.y < 0 || next.y > size.height - 1) continue;	// 인덱스 벗어났을 시
+
+			cvLine(cvs, current, next, e.c, e.brush);		// 한 칸 씩은 칠하고 중지하게 해 배경이 안칠해지는 경우를 막음
+			break;
+		}
+
+		float sum = next.x * next.x + next.y * next.y;			//법선벡터를 구하기 위한 계산	
+		sum = sqrt(sum);										//법선벡터를 구하기 위한 계산
+		next.x = next.x * e.brush / sum + current.x;				// 연결할 다음 좌표 이동할 수직 방향 법선 벡터에 현재 붓크기를 곱해주고 지금 좌표를 더해준다
+		next.y = next.y * e.brush / sum + current.y;			// 연결할 다음 좌표 이동할 수직 방향 법선 벡터에 현재 붓크기를 곱해주고 지금 좌표를 더해준다
+		if (next.x < 0 || next.x > size.width - 1) continue;	// 인덱스 벗어났을 시
+		if (next.y < 0 || next.y > size.height - 1) continue;	// 인덱스 벗어났을 시
+
+		cvLine(cvs, current, next, e.c, e.brush);		// 붓질
+
+		current = next;		//현재좌표 변경
+
+
+	}
+
+}
+
 void paintLayer(IplImage* ref, IplImage* cvs, int brush, int n) {
 	CvSize size = cvGetSize(ref);
 	int i = 0, cnt = 0;
@@ -99,7 +207,11 @@ void paintLayer(IplImage* ref, IplImage* cvs, int brush, int n) {
 			cvCircle(cvs, e[j].point, e[j].brush, e[j].c, -1);			//원으로 찍음
 		}
 	}
-	
+	else if (n == 1) {			//모드가 1이라면
+		for (int j = 0; j < i; ++j) {
+			paintstroke(e[j], ref, cvs);		//붓질하는 함수 호출
+		}
+	}
 	delete[] e;		//동적할당 해제
 
 }
@@ -129,6 +241,16 @@ int main() {
 			cout << "File Not Found!" << endl;
 		}
 		else break;
+	}
+
+	while (1) {										//모드를 받을 반복문
+		cout << "Select Drawing Mode(0 = circle, 1 = stroke) :";
+		cin >> n;
+		if (n != 0 && n != 1) {
+			cout << "Wrong Drawing Mode!" << endl;
+		}
+		else
+			break;
 	}
 
 	CvSize size = cvGetSize(src);
